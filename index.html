@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avijit Majumder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #1a1a1a;
+      --mid: #444;
+      --light: #888;
+      --border: #ddd;
+      --bg: #ffffff;
+      --link: #2a6496;
+    }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--bg);
+      color: var(--black);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: relative;
+      text-align: center;
+    }
+
+    .banner {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%) contrast(0.85);
+      background: #555 url('banner.jpg') center/cover no-repeat;
+    }
+
+    /* Fallback gradient if no banner image */
+    .banner-fallback {
+      width: 100%;
+      height: 220px;
+      background: linear-gradient(135deg, #2c2c2c 0%, #555 40%, #888 70%, #3a3a3a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .banner-fallback::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255,255,255,0.03) 10px,
+        rgba(255,255,255,0.03) 20px
+      );
+    }
+
+    .avatar-wrap {
+      position: absolute;
+      bottom: -44px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      object-fit: cover;
+      background: #bbb url('profile.jpg') center/cover no-repeat;
+      display: block;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .avatar-placeholder {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      background: linear-gradient(135deg, #3a3a3a, #666);
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff !important;
+      font-family: 'Playfair Display', serif;
+      line-height: 1;
+      text-align: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .name-block {
+      margin-top: 58px;
+      padding-bottom: 8px;
+    }
+    .name-block h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--black);
+    }
+
+    /* ── NAV ── */
+    nav {
+      border-bottom: 1px solid var(--border);
+      margin: 0 auto;
+      max-width: 700px;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+    nav button {
+      background: none;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      padding: 12px 32px;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--light);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      margin-bottom: -1px;
+    }
+    nav button:hover { color: var(--black); }
+    nav button.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+      font-weight: 600;
+    }
+
+    /* ── CONTENT ── */
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 36px 24px 80px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Section label */
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 12px;
+      margin-top: 36px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    p { margin-bottom: 1em; color: var(--mid); }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Research interests tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 0.8rem;
+      color: var(--link);
+      cursor: pointer;
+    }
+    .tag::after { content: ','; color: var(--mid); margin-left: 1px; }
+    .tag:last-child::after { content: ''; }
+
+    .more-link { color: var(--light); font-size: 0.85rem; }
+
+    /* ── PAPERS ── */
+    .paper-card {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 8px 0 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .paper-thumb {
+      width: 72px;
+      min-width: 72px;
+      height: 90px;
+      background: #f0f0f0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+    }
+    .paper-thumb span {
+      display: block;
+      height: 3px;
+      background: #ccc;
+      border-radius: 1px;
+    }
+    .paper-thumb span:nth-child(1) { width: 40px; }
+    .paper-thumb span:nth-child(2) { width: 35px; }
+    .paper-thumb span:nth-child(3) { width: 42px; }
+    .paper-thumb span:nth-child(4) { width: 30px; }
+    .paper-thumb span:nth-child(5) { width: 38px; }
+
+    .paper-meta h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--black);
+      margin-bottom: 4px;
+      line-height: 1.45;
+    }
+    .paper-meta .author {
+      font-size: 0.85rem;
+      color: var(--light);
+      margin-bottom: 10px;
+    }
+    .btn-download {
+      display: inline-block;
+      padding: 5px 16px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--mid);
+      cursor: pointer;
+      background: none;
+      border-radius: 2px;
+      font-family: 'Source Serif 4', serif;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-download:hover { background: #f5f5f5; color: var(--black); }
+
+    /* ── CV ── */
+    .cv-placeholder {
+      text-align: center;
+      color: var(--light);
+      font-size: 0.95rem;
+      padding: 60px 0;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 40px;
+    }
+    @media (max-width: 540px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    .social-link {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.9rem; color: var(--mid);
+      text-decoration: none;
+    }
+    .social-link:hover { color: var(--black); }
+    .social-icon {
+      width: 22px; height: 22px;
+      background: var(--black);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .contact-form label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--mid);
+      margin-bottom: 5px;
+      margin-top: 14px;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.9rem;
+      color: var(--black);
+      outline: none;
+      border-radius: 0;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: #aaa; }
+    .contact-form textarea { height: 130px; }
+    .btn-submit {
+      margin-top: 14px;
+      padding: 7px 22px;
+      border: 1px solid var(--border);
+      background: none;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--mid);
+      transition: background 0.15s;
+    }
+    .btn-submit:hover { background: #f5f5f5; color: var(--black); }
+
+    /* success message */
+    .form-success {
+      display: none;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #2e7d32;
+    }
+
+    /* affiliations note */
+    .affiliations-note { color: var(--light); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <!-- Replace 'banner.jpg' with your own banner image file -->
+  <div class="banner-fallback" id="bannerEl"></div>
+
+  <div class="avatar-wrap">
+    <!-- Click the circle to upload your photo -->
+    <div class="avatar-placeholder" id="avatarEl" onclick="document.getElementById('photoInput').click()" title="Click to upload your photo" style="cursor:pointer;">AM</div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="loadPhoto(event)">
+  </div>
+</header>
+
+<div class="name-block" style="text-align:center; padding: 0 16px;">
+  <h1>Avijit Majumder</h1>
+</div>
+
+<nav>
+  <button class="active" onclick="showPage('home', this)">Home</button>
+  <button onclick="showPage('research', this)">Research</button>
+  <button onclick="showPage('cv', this)">CV</button>
+  <button onclick="showPage('contact', this)">Contact</button>
+</nav>
+
+<!-- ══════════════ HOME ══════════════ -->
+<div class="container">
+  <div id="home" class="page active">
+
+    <div class="section-label">Biography</div>
+    <p>
+      I am an interdisciplinary independent researcher working at the intersection of technology innovation, consumer behavior, and sustainable product ecosystems. My research explores how emerging technologies—particularly artificial intelligence, machine learning, digital platforms, and smart systems—can transform consumer experiences, business models, and product development across <a href="#">industries</a>.
+    </p>
+    <p>
+      My work spans multiple applied domains including retail innovation, fintech systems, digital marketing, customer engagement platforms, and smart device ecosystems. A significant portion of my research investigates the use of computational approaches such as machine learning, computer vision, and data-driven systems for improving decision making, personalization, and service design.
+    </p>
+    <p>
+      Alongside digital technologies, I conduct research on consumer product innovation, including food science, cosmetic formulations, packaging systems, and sustainable materials. Many of these projects examine circular economy approaches, biodegradable materials, and environmentally responsible alternatives in consumer goods and packaging.
+    </p>
+    <p>
+      Another major focus of my work is strategic marketing, branding, and socio-cultural consumption patterns, particularly in emerging digital environments such as social media platforms, online marketplaces, and immersive retail ecosystems. My research also explores how behavioral insights and design thinking can inform new products, services, and customer experiences.
+    </p>
+    <p>
+      Through an interdisciplinary approach that combines technology, market strategy, material science, and consumer research, my work aims to generate forward-looking insights into the evolution of future industries, digital economies, and sustainable innovation systems.
+    </p>
+
+    <div class="section-label">Research Interests</div>
+    <div class="tags">
+      <span class="tag">Education</span>
+      <span class="tag">Social Sciences</span>
+      <span class="tag">History</span>
+      <span class="tag">Business</span>
+      <span class="tag">Philosophy</span>
+      <span class="tag">Computer Science</span>
+      <span class="tag">Economics</span>
+      <span class="tag">Sociology</span>
+      <span class="tag">Psychology</span>
+      <span class="tag">International Relations</span>
+    </div>
+    <div style="margin-top:8px;">
+      <a href="#" class="more-link">more</a>
+    </div>
+
+    <div class="section-label" style="margin-top:32px;">Affiliations</div>
+    <p class="affiliations-note">Add your affiliations to display them here.</p>
+
+  </div>
+
+  <!-- ══════════════ RESEARCH ══════════════ -->
+  <div id="research" class="page">
+
+    <div class="section-label">Papers</div>
+
+    <div class="paper-card">
+      <div class="paper-thumb">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="paper-meta">
+        <h3>A Conceptual Framework for Climate-Adaptive Oil Control in Skincare Formulations</h3>
+        <p class="author">By Avijit Majumder</p>
+        <button class="btn-download" onclick="alert('Paper download link goes here.')">Download</button>
+      </div>
+    </div>
+
+    <!-- Add more papers below using the same .paper-card structure -->
+
+  </div>
+
+  <!-- ══════════════ CV ══════════════ -->
+  <div id="cv" class="page">
+    <div class="cv-placeholder">
+      Upload your CV file and replace this section,<br>or embed a PDF using an &lt;iframe&gt;.
+    </div>
+  </div>
+
+  <!-- ══════════════ CONTACT ══════════════ -->
+  <div id="contact" class="page">
+    <div class="contact-grid">
+
+      <div>
+        <div class="section-label" style="margin-top:0">Social</div>
+        <a href="https://www.academia.edu" target="_blank" class="social-link">
+          <div class="social-icon">A</div>
+          Academia.edu
+        </a>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-top:0">Contact</div>
+        <div class="contact-form">
+          <label>Name</label>
+          <input type="text" id="c-name" placeholder="">
+          <label>Your Email address</label>
+          <input type="email" id="c-email" placeholder="">
+          <label>Subject</label>
+          <input type="text" id="c-subject" placeholder="">
+          <label>Message</label>
+          <textarea id="c-message"></textarea>
+          <button class="btn-submit" onclick="submitForm()">Submit</button>
+          <div class="form-success" id="formSuccess">✓ Message sent! I'll get back to you soon.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function loadPhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const el = document.getElementById('avatarEl');
+      el.innerHTML = '';
+      el.style.background = `url('${e.target.result}') center/cover no-repeat`;
+      el.style.cursor = 'pointer';
+      el.title = 'Click to change photo';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function submitForm() {
+    const name    = document.getElementById('c-name').value.trim();
+    const email   = document.getElementById('c-email').value.trim();
+    const subject = document.getElementById('c-subject').value.trim();
+    const message = document.getElementById('c-message').value.trim();
+    if (!name || !email || !message) {
+      alert('Please fill in Name, Email, and Message.');
+      return;
+    }
+    // Wire to Formspree: replace YOUR_ID below
+    // fetch('https://formspree.io/f/YOUR_ID', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ name, email, subject, message })
+    // });
+    document.getElementById('formSuccess').style.display = 'block';
+    document.getElementById('c-name').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-subject').value = '';
+    document.getElementById('c-message').value = '';
+  }
+
+  // If you place profile.jpg and banner.jpg in the same folder,
+  // swap the placeholders for real images automatically:
+  (function tryImages() {
+    const banner = new Image();
+    banner.onload = function() {
+      const el = document.getElementById('bannerEl');
+      el.style.background = `url('banner.jpg') center/cover no-repeat`;
+      el.style.filter = 'grayscale(100%) contrast(0.85)';
+    };
+    banner.src = 'banner.jpg';
+
+    const avatar = new Image();
+    avatar.onload = function() {
+      const el = document.getElementById('avatarEl');
+      el.outerHTML = `<img src="profile.jpg" class="avatar" alt="Avijit Majumder" id="avatarEl">`;
+    };
+    avatar.src = 'profile.jpg';
+  })();
+</script>
+
+</body>
+</html>
